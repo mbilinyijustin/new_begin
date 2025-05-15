@@ -15,4 +15,4 @@ def submit_soil_assessment(request):
 
 
 def success(request):
-    return render(request, 'assessment/success.html')
+    return render(request, 'success.html')
