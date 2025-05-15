@@ -15,6 +15,7 @@ class SoilAssessment(models.Model):
 
 
 class Assessment(models.Model):
+    objects = None
     soil_type = models.CharField(max_length=100)
     moisture_level = models.DecimalField(max_digits=5, decimal_places=2)
     fertility = models.CharField(max_length=100)
