@@ -1,0 +1,14 @@
+from django import forms
+from .models import SoilAssessment
+
+class SoilAssessmentForm(forms.ModelForm):
+    class Meta:
+        model = SoilAssessment
+        fields = ['farmer_name', 'soil_nutrient_npk', 'soil_moisture', 'soil_ph', 'soil_temperature']
+        widgets = {
+            'farmer_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'soil_nutrient_npk': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. 10-20-10'}),
+            'soil_moisture': forms.NumberInput(attrs={'class': 'form-control'}),
+            'soil_ph': forms.NumberInput(attrs={'class': 'form-control'}),
+            'soil_temperature': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
