@@ -12,3 +12,7 @@ def submit_soil_assessment(request):
         else:
             form = SoilAssessmentForm()
         return render(request, 'submit_assessment.html', {'form': form})
+
+
+def success(request):
+    return render(request, 'success.html')
