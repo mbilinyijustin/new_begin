@@ -26,17 +26,17 @@ def home(request):
         fertility = request.POST.get('fertility')
         farm_size = request.POST.get('farm_size')
 
-        # save to database
-        Assessment.objects.create(
-            soil_type=soil_type,
-            moisture_level=moisture_level,
-            fertility=fertility,
-            farm_size=farm_size
-        )
+        # Make sure all fields are present
+        if all([soil_type, moisture_level, fertility, farm_size]):
+            Assessment.objects.create(
+                soil_type=soil_type,
+                moisture_level=moisture_level,
+                fertility=fertility,
+                farm_size=farm_size
+            )
+            return redirect('success')
 
-        return redirect('success')
     return render(request, 'home.html')
-
 
 def success(request):
     return render(request, 'success.html')
