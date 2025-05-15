@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import SoilAssessmentForm
 
+
 def submit_soil_assessment(request):
     if request.method == 'POST':
         form = SoilAssessmentForm(request.POST)
@@ -11,3 +12,7 @@ def submit_soil_assessment(request):
         form = SoilAssessmentForm()
 
     return render(request, 'submit_assessment.html', {'form': form})  # <-- This must be returned!
+
+
+def success(request):
+    return render(request, 'assessment/success.html')
