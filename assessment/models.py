@@ -1,26 +1,10 @@
 from django.db import models
-
-
-# Create your models here.
-class SoilAssessment(models.Model):
-    farmer_name = models.CharField(max_length=100)
-    soil_nutrient_npk = models.CharField(max_length=100)
-    soil_moisture = models.FloatField(help_text="Percentage (%)")
-    soil_ph = models.FloatField()
-    soil_temperature = models.FloatField(help_text="Temperature in °C")
-    submission_date = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.farmer_name} - {self.submission_date.strftime('%Y-%m-%d')}"
-
+from django.contrib.auth.models import User
 
 class Assessment(models.Model):
-    objects = None
-    soil_type = models.CharField(max_length=100)
-    moisture_level = models.DecimalField(max_digits=5, decimal_places=2)
-    fertility = models.CharField(max_length=100)
-    farm_size = models.DecimalField(max_digits=6, decimal_places=2)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    soil_ph = models.DecimalField(max_digits=4, decimal_places=2)
+    soil_temperature = models.DecimalField(max_digits=5, decimal_places=2)
+    soil_moisture = models.DecimalField(max_digits=5, decimal_places=2)
+    soil_npk = models.CharField(max_length=20)
     created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.soil_type} - {self.moisture_level} - {self.farm_size}"
