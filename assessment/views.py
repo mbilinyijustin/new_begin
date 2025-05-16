@@ -4,7 +4,22 @@ from django.contrib.auth.decorators import login_required
 from .models import Assessment
 from django.shortcuts import render, get_object_or_404
 from .models import SoilAssessment
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .forms import SoilAssessmentForm
 
+@login_required
+def new_soil_assessment(request):
+    if request.method == 'POST':
+        form = SoilAssessmentForm(request.POST)
+        if form.is_valid():
+            assessment = form.save(commit=False)
+            assessment.user = request.user
+            assessment.save()
+            return redirect('assessment_result', pk=assessment.pk)
+    else:
+        form = SoilAssessmentForm()
+    return render(request, 'assessment/new_assessment.html', {'form': form})
 def assessment_result(request, assessment_id):
     assessment = get_object_or_404(SoilAssessment, pk=assessment_id)
     return render(request, 'assessment_result.html', {'assessment': assessment})
