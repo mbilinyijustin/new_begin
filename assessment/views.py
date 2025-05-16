@@ -2,6 +2,12 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from .models import Assessment
+from django.shortcuts import render, get_object_or_404
+from .models import SoilAssessment
+
+def assessment_result(request, assessment_id):
+    assessment = get_object_or_404(SoilAssessment, pk=assessment_id)
+    return render(request, 'assessment_result.html', {'assessment': assessment})
 
 def home(request):
     return render(request, 'home.html')
