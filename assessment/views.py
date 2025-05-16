@@ -32,3 +32,23 @@ def dashboard(request):
         )
         return redirect('dashboard')
     return render(request, 'dashboard.html')
+
+
+def new_assessment(request):
+    return render(request, 'new_assessment.html')
+
+
+def save_assessment(request):
+    if request.method == 'POST':
+        # Collect and process form data
+        ph = request.POST['ph']
+        moisture = request.POST['moisture']
+        fertility = request.POST['fertility']
+        farm_size = request.POST['farm_size']
+        weather = request.POST['weather']
+
+        # Save or process data as needed
+        # Example: SoilAssessment.objects.create(...)
+
+        return redirect('dashboard')  # or a results page
+
