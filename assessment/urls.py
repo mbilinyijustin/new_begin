@@ -10,5 +10,6 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('new-assessment/', views.new_assessment, name='new_assessment'),
     path('save-assessment/', views.save_assessment, name='save_assessment'),
+    path('assessment/<int:assessment_id>/result/', views.assessment_result, name='assessment_result'),
 
 ]
