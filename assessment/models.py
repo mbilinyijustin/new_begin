@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 
 
 class Assessment(models.Model):
+    objects = None
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     soil_ph = models.DecimalField(max_digits=4, decimal_places=2)
     soil_temperature = models.DecimalField(max_digits=5, decimal_places=2)
