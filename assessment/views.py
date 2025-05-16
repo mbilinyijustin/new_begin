@@ -1,43 +1,34 @@
 from django.shortcuts import render, redirect
-from .forms import SoilAssessmentForm
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
 from .models import Assessment
 
-
-def submit_soil_assessment(request):
-    if request.method == 'POST':
-        form = SoilAssessmentForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('success')  # This line is important!
-    else:
-        form = SoilAssessmentForm()
-
-    return render(request, 'submit_assessment.html', {'form': form})  # <-- This must be returned!
-
-
-def success(request):
-    return render(request, 'success.html')
-
-
 def home(request):
-    if request.method == 'POST':
-        soil_type = request.POST.get('soil_type')
-        moisture_level = request.POST.get('moisture_level')
-        fertility = request.POST.get('fertility')
-        farm_size = request.POST.get('farm_size')
-
-        # Make sure all fields are present
-        if all([soil_type, moisture_level, fertility, farm_size]):
-            Assessment.objects.create(
-                soil_type=soil_type,
-                moisture_level=moisture_level,
-                fertility=fertility,
-                farm_size=farm_size
-            )
-            return redirect('success')
-
     return render(request, 'home.html')
 
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    else:
+        form = UserCreationForm()
+    return render(request, 'register.html', {'form': form})
 
-#def success(request):
-   # return render(request, 'success.html')
+@login_required
+def dashboard(request):
+    if request.method == 'POST':
+        ph = request.POST.get('ph')
+        temperature = request.POST.get('temperature')
+        moisture = request.POST.get('moisture')
+        npk = request.POST.get('npk')
+        Assessment.objects.create(
+            user=request.user,
+            soil_ph=ph,
+            soil_temperature=temperature,
+            soil_moisture=moisture,
+            soil_npk=npk
+        )
+        return redirect('dashboard')
+    return render(request, 'dashboard.html')
