@@ -17,7 +17,6 @@ class SoilAssessment(models.Model):
     ph = models.DecimalField(max_digits=4, decimal_places=2)
     moisture = models.DecimalField(max_digits=5, decimal_places=2, help_text="Moisture in %")
     fertility = models.CharField(max_length=100)  # or whatever type is appropriate
-
     farm_size = models.DecimalField(max_digits=6, decimal_places=2, help_text="Farm size in acres")
     weather = models.CharField(max_length=100, help_text="e.g. sunny, rainy")
     created_at = models.DateTimeField(auto_now_add=True)
