@@ -17,12 +17,13 @@ def register_user(request):
         username = request.POST['username']
         email = request.POST['email']
         password = request.POST['password']
+        confirm_password= request.POST['confirm_password']
 
         if User.objects.filter(username=username).exists():
             messages.error(request, 'Username already exists')
             return redirect('register')
 
-        user = User.objects.create_user(username=username, email=email, password=password)
+        user = User.objects.create_user(username=username, email=email, password=password, confirm_password=confirm_password)
         login(request, user)  # Optional: log user in after registration
         return redirect('dashboard')  # Redirect to dashboard or home page
 

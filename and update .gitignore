@@ -1,0 +1,127 @@
+[1mdiff --git a/assessment/__pycache__/admin.cpython-312.pyc b/assessment/__pycache__/admin.cpython-312.pyc[m
+[1mindex 811b636..56d8fba 100644[m
+Binary files a/assessment/__pycache__/admin.cpython-312.pyc and b/assessment/__pycache__/admin.cpython-312.pyc differ
+[1mdiff --git a/assessment/__pycache__/forms.cpython-312.pyc b/assessment/__pycache__/forms.cpython-312.pyc[m
+[1mindex 6d727d1..c8c67a0 100644[m
+Binary files a/assessment/__pycache__/forms.cpython-312.pyc and b/assessment/__pycache__/forms.cpython-312.pyc differ
+[1mdiff --git a/assessment/__pycache__/urls.cpython-312.pyc b/assessment/__pycache__/urls.cpython-312.pyc[m
+[1mindex 24f7ae1..b3d11e5 100644[m
+Binary files a/assessment/__pycache__/urls.cpython-312.pyc and b/assessment/__pycache__/urls.cpython-312.pyc differ
+[1mdiff --git a/assessment/__pycache__/views.cpython-312.pyc b/assessment/__pycache__/views.cpython-312.pyc[m
+[1mindex 4ad9c30..e00f68a 100644[m
+Binary files a/assessment/__pycache__/views.cpython-312.pyc and b/assessment/__pycache__/views.cpython-312.pyc differ
+[1mdiff --git a/assessment/views.py b/assessment/views.py[m
+[1mindex 3837627..2f0845d 100644[m
+[1m--- a/assessment/views.py[m
+[1m+++ b/assessment/views.py[m
+[36m@@ -1,12 +1,34 @@[m
+[31m-from django.shortcuts import render, redirect[m
+[31m-from django.contrib.auth.forms import UserCreationForm[m
+ from django.contrib.auth.decorators import login_required[m
+[32m+[m[32mfrom django.contrib.auth.forms import UserCreationForm[m
+[32m+[m[32mfrom django.shortcuts import get_object_or_404[m
+[32m+[m[32mfrom django.shortcuts import render, redirect[m
+[32m+[m
+[32m+[m[32mfrom .forms import SoilAssessmentForm[m
+ from .models import Assessment[m
+[31m-from django.shortcuts import render, get_object_or_404[m
+ from .models import SoilAssessment[m
+[32m+[m
+[32m+[m[32mfrom django.contrib.auth.models import User[m
+[32m+[m[32mfrom django.contrib.auth import login[m
+ from django.shortcuts import render, redirect[m
+[31m-from django.contrib.auth.decorators import login_required[m
+[31m-from .forms import SoilAssessmentForm[m
+[32m+[m[32mfrom django.contrib import messages[m
+[32m+[m
+[32m+[m[32mdef register_user(request):[m
+[32m+[m[32m    if request.method == 'POST':[m
+[32m+[m[32m        username = request.POST['username'][m
+[32m+[m[32m        email = request.POST['email'][m
+[32m+[m[32m        password = request.POST['password'][m
+[32m+[m
+[32m+[m[32m        if User.objects.filter(username=username).exists():[m
+[32m+[m[32m            messages.error(request, 'Username already exists')[m
+[32m+[m[32m            return redirect('register')[m
+[32m+[m
+[32m+[m[32m        user = User.objects.create_user(username=username, email=email, password=password)[m
+[32m+[m[32m        login(request, user)  # Optional: log user in after registration[m
+[32m+[m[32m        return redirect('dashboard')  # Redirect to dashboard or home page[m
+[32m+[m
+[32m+[m[32m    return render(request, 'register.html')[m
+[32m+[m
+[32m+[m
+ [m
+ @login_required[m
+ def new_soil_assessment(request):[m
+[36m@@ -20,13 +42,17 @@[m [mdef new_soil_assessment(request):[m
+     else:[m
+         form = SoilAssessmentForm()[m
+     return render(request, 'assessment/new_assessment.html', {'form': form})[m
+[32m+[m
+[32m+[m
+ def assessment_result(request, assessment_id):[m
+     assessment = get_object_or_404(SoilAssessment, pk=assessment_id)[m
+     return render(request, 'assessment_result.html', {'assessment': assessment})[m
+ [m
+[32m+[m
+ def home(request):[m
+     return render(request, 'home.html')[m
+ [m
+[32m+[m
+ def register(request):[m
+     if request.method == 'POST':[m
+         form = UserCreationForm(request.POST)[m
+[36m@@ -37,6 +63,7 @@[m [mdef register(request):[m
+         form = UserCreationForm()[m
+     return render(request, 'register.html', {'form': form})[m
+ [m
+[32m+[m
+ @login_required[m
+ def dashboard(request):[m
+     if request.method == 'POST':[m
+[36m@@ -72,4 +99,3 @@[m [mdef save_assessment(request):[m
+         # Example: SoilAssessment.objects.create(...)[m
+ [m
+         return redirect('dashboard')  # or a results page[m
+[31m-[m
+[1mdiff --git a/db.sqlite3 b/db.sqlite3[m
+[1mindex bf16835..213ec89 100644[m
+Binary files a/db.sqlite3 and b/db.sqlite3 differ
+[1mdiff --git a/soil_suitability/settings.py b/soil_suitability/settings.py[m
+[1mindex b480b86..963ecd8 100644[m
+[1m--- a/soil_suitability/settings.py[m
+[1m+++ b/soil_suitability/settings.py[m
+[36m@@ -37,6 +37,7 @@[m [mINSTALLED_APPS = [[m
+     'django.contrib.sessions',[m
+     'django.contrib.messages',[m
+     'django.contrib.staticfiles',[m
+[32m+[m[32m    'assessment',[m
+ ][m
+ [m
+ MIDDLEWARE = [[m
+[36m@@ -54,7 +55,7 @@[m [mROOT_URLCONF = 'soil_suitability.urls'[m
+ TEMPLATES = [[m
+     {[m
+         'BACKEND': 'django.template.backends.django.DjangoTemplates',[m
+[31m-        'DIRS': [],[m
+[32m+[m[32m        'DIRS': [BASE_DIR / 'assessment' / 'templates'],[m
+         'APP_DIRS': True,[m
+         'OPTIONS': {[m
+             'context_processors': [[m
+[1mdiff --git a/soil_suitability/urls.py b/soil_suitability/urls.py[m
+[1mindex 1bc98a1..db77bad 100644[m
+[1m--- a/soil_suitability/urls.py[m
+[1m+++ b/soil_suitability/urls.py[m
+[36m@@ -16,7 +16,11 @@[m [mIncluding another URLconf[m
+ """[m
+ from django.contrib import admin[m
+ from django.urls import path[m
+[32m+[m[32mfrom django.contrib import admin[m
+[32m+[m[32mfrom django.urls import path, include[m
+ [m
+ urlpatterns = [[m
+     path('admin/', admin.site.urls),[m
+[32m+[m[32m    path('', include('assessment.urls')) #use actual app name here[m
+[32m+[m
+ ][m
