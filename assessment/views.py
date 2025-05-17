@@ -1,12 +1,34 @@
-from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.decorators import login_required
-from .models import Assessment
-from django.shortcuts import render, get_object_or_404
-from .models import SoilAssessment
+from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+
 from .forms import SoilAssessmentForm
+from .models import Assessment
+from .models import SoilAssessment
+
+from django.contrib.auth.models import User
+from django.contrib.auth import login
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
+def register_user(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        email = request.POST['email']
+        password = request.POST['password']
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'Username already exists')
+            return redirect('register')
+
+        user = User.objects.create_user(username=username, email=email, password=password)
+        login(request, user)  # Optional: log user in after registration
+        return redirect('dashboard')  # Redirect to dashboard or home page
+
+    return render(request, 'register.html')
+
+
 
 @login_required
 def new_soil_assessment(request):
@@ -20,12 +42,16 @@ def new_soil_assessment(request):
     else:
         form = SoilAssessmentForm()
     return render(request, 'assessment/new_assessment.html', {'form': form})
+
+
 def assessment_result(request, assessment_id):
     assessment = get_object_or_404(SoilAssessment, pk=assessment_id)
     return render(request, 'assessment_result.html', {'assessment': assessment})
 
+
 def home(request):
     return render(request, 'home.html')
+
 
 def register(request):
     if request.method == 'POST':
@@ -36,6 +62,7 @@ def register(request):
     else:
         form = UserCreationForm()
     return render(request, 'register.html', {'form': form})
+
 
 @login_required
 def dashboard(request):
@@ -72,4 +99,3 @@ def save_assessment(request):
         # Example: SoilAssessment.objects.create(...)
 
         return redirect('dashboard')  # or a results page
-
