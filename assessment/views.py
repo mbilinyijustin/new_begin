@@ -10,6 +10,16 @@ from .forms import SoilAssessmentForm
 from .models import Assessment
 from .models import SoilAssessment
 
+# assessment/views.py
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+
+def login_view(request):
+    return render(request, 'login.html')
+
+def register_view(request):
+    return render(request, 'register.html')
+
 
 def register_user(request):
     if request.method == 'POST':
