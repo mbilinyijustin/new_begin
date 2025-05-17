@@ -1,5 +1,8 @@
+from django.contrib import messages
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
 
@@ -7,28 +10,24 @@ from .forms import SoilAssessmentForm
 from .models import Assessment
 from .models import SoilAssessment
 
-from django.contrib.auth.models import User
-from django.contrib.auth import login
-from django.shortcuts import render, redirect
-from django.contrib import messages
 
 def register_user(request):
     if request.method == 'POST':
         username = request.POST['username']
         email = request.POST['email']
         password = request.POST['password']
-        confirm_password= request.POST['confirm_password']
+        confirm_password = request.POST['confirm_password']
 
         if User.objects.filter(username=username).exists():
             messages.error(request, 'Username already exists')
             return redirect('register')
 
-        user = User.objects.create_user(username=username, email=email, password=password, confirm_password=confirm_password)
+        user = User.objects.create_user(username=username, email=email, password=password,
+                                        confirm_password=confirm_password)
         login(request, user)  # Optional: log user in after registration
         return redirect('dashboard')  # Redirect to dashboard or home page
 
     return render(request, 'register.html')
-
 
 
 @login_required

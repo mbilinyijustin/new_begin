@@ -16,7 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.contrib import admin
+from django.urls import path, include
 
-urlpatterns = [
+urlpatterns = {
     path('admin/', admin.site.urls),
-]
+    path('', include('assessment.urls')),  # use actual app name here
+    path('accounts/', include('django.contrib.auth.urls')),  # <-- Add this line
+}
