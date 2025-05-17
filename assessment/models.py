@@ -16,7 +16,7 @@ class SoilAssessment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     ph = models.DecimalField(max_digits=4, decimal_places=2)
     moisture = models.DecimalField(max_digits=5, decimal_places=2, help_text="Moisture in %")
-    fertilizer_ratio = models.CharField(max_length=20)  # instead of DecimalField
+    fertility = models.CharField(max_length=100)  # or whatever type is appropriate
 
     farm_size = models.DecimalField(max_digits=6, decimal_places=2, help_text="Farm size in acres")
     weather = models.CharField(max_length=100, help_text="e.g. sunny, rainy")
